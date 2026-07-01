@@ -1,9 +1,17 @@
+import './config/env.js';
 import express from 'express';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import routes from './routes/index.js';
 
 const app = express();
 
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(routes);
 
 app.use((error, req, res, next) => {
 	try {
