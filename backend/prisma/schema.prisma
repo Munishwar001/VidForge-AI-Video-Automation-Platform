@@ -13,11 +13,11 @@ datasource db {
 }
 
 model Role {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  users     User[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String     @id @default(uuid())
+  name      String     @unique
+  users     UserRole[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   @@map("roles")
 }
@@ -27,13 +27,24 @@ model User {
   name        String
   email       String               @unique
   password    String
-  roleId      String
-  role        Role                 @relation(fields: [roleId], references: [id])
+  roles       UserRole[]
   resetTokens PasswordResetToken[]
   createdAt   DateTime             @default(now())
   updatedAt   DateTime             @updatedAt
 
   @@map("users")
+}
+
+model UserRole {
+  userId    String
+  roleId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, roleId])
+  @@index([roleId])
+  @@map("user_roles")
 }
 
 model PasswordResetToken {
