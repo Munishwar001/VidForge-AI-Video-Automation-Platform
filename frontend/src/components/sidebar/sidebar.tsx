@@ -22,6 +22,20 @@ const ProjectsIcon = () => (
 	</svg>
 );
 
+const VideoIcon = () => (
+	<svg className="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+	</svg>
+);
+
+const ImageIcon = () => (
+	<svg className="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1z" />
+		<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 16l5-5 4 4 3-3 6 6" />
+		<circle cx="8" cy="9" r="1.5" fill="currentColor" stroke="none" />
+	</svg>
+);
+
 const TemplatesIcon = () => (
 	<svg className="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 		<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5h16v4H4V5zm0 6h7v8H4v-8zm9 0h7v8h-7v-8z" />
@@ -57,10 +71,12 @@ type NavItem = {
 
 const navItems: NavItem[] = [
 	{ label: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
-	{ label: "Projects", icon: <ProjectsIcon /> },
+	{ label: "Video Generator", icon: <VideoIcon />, path: "/videos" },
+	{ label: "Image Generator", icon: <ImageIcon />, path: "/images" },
+	{ label: "Projects", icon: <ProjectsIcon />, path: "/projects" },
 	{ label: "Templates", icon: <TemplatesIcon /> },
-	{ label: "Media Library", icon: <MediaIcon /> },
-	{ label: "Settings", icon: <SettingsIcon /> },
+	{ label: "Media Library", icon: <MediaIcon />, path: "/media-library" },
+	{ label: "Settings", icon: <SettingsIcon />, path: "/settings" },
 ];
 
 export default function Sidebar() {

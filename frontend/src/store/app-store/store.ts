@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { MainClient } from "../../client/quiz-client";
 import type { MessageInstance } from "antd/es/message/interface";
-import type { User } from "../../types/user";
+import type { User } from "../../@types/user";
 import { rolesMap } from "../../libs/statusMap";
 
 interface TestStoreState {
