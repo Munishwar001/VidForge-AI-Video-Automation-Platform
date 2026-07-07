@@ -162,3 +162,96 @@ h1, h2, h3, h4, h5, h6 {
   background: rgba(109, 93, 246, 0.15);
   color: var(--accent-primary);
 }
+
+/* ---------- Features Section: Premium Motion System ---------- */
+
+@keyframes drift-slow {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(20px, -24px) scale(1.06); }
+}
+
+@keyframes drift-reverse {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(-24px, 18px) scale(1.05); }
+}
+
+@keyframes cube-spin-float {
+  0% { transform: translateY(0px) rotate(12deg); }
+  50% { transform: translateY(-18px) rotate(30deg); }
+  100% { transform: translateY(0px) rotate(12deg); }
+}
+
+@keyframes particle-pulse {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.4); }
+}
+
+@keyframes line-flow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes soft-bounce {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-drift-slow { animation: drift-slow 12s ease-in-out infinite; }
+.animate-drift-reverse { animation: drift-reverse 15s ease-in-out infinite; }
+.animate-cube-float { animation: cube-spin-float 9s ease-in-out infinite; }
+.animate-particle { animation: particle-pulse 3.5s ease-in-out infinite; }
+.animate-soft-bounce { animation: soft-bounce 2.4s ease-in-out infinite; }
+
+.workflow-line {
+  background-image: linear-gradient(90deg, transparent 0%, #1A3BF5 20%, #9b51e0 50%, #1A3BF5 80%, transparent 100%);
+  background-size: 200% 100%;
+  animation: line-flow 3s linear infinite;
+}
+
+.workflow-line-v {
+  background-image: linear-gradient(180deg, transparent 0%, #1A3BF5 20%, #9b51e0 50%, #1A3BF5 80%, transparent 100%);
+  background-size: 100% 200%;
+  animation: line-flow-v 3s linear infinite;
+}
+
+@keyframes line-flow-v {
+  0% { background-position: 50% 0%; }
+  100% { background-position: 50% 200%; }
+}
+
+/* Bento card mouse-follow spotlight */
+.bento-card {
+  position: relative;
+  isolation: isolate;
+}
+.bento-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  background: radial-gradient(220px circle at var(--spot-x, 50%) var(--spot-y, 50%), rgba(26, 59, 245, 0.10), transparent 70%);
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.bento-card:hover::before {
+  opacity: 1;
+}
+
+/* ---------- Powered By: logo marquee ---------- */
+/* Motion is driven by GSAP (see MarqueeRow in landing.tsx) so the loop runs
+   continuously off React's render cycle and never stalls or pauses. */
+
+.marquee-row {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
