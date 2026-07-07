@@ -6,6 +6,7 @@ import { AxiosError } from "axios";
 import { zodRule } from "../libs/zod-rule";
 import { loginSchema } from "../schemas/auth";
 import { mainClient, useAppStore } from "../store";
+import logoCube from "../assets/cubeImage.jpg";
 
 const { Title, Text } = Typography;
 
@@ -52,16 +53,34 @@ export default function Login() {
 	};
 
 	return (
-		<main className="grid min-h-svh place-items-center px-5 py-8">
-			<section className="w-full max-w-[420px] rounded-[28px] border border-[var(--border)] bg-gradient-to-b from-white/70 to-white p-8 shadow-[var(--shadow)] sm:p-10">
-				<div className="mb-7 text-left">
-					<Text className="!mb-2 block text-xs uppercase tracking-[0.22em] !text-[var(--accent)]">
-						VidForge AI
-					</Text>
-					<Title level={2} className="!mb-1.5">
+		<main className="relative grid min-h-svh place-items-center overflow-hidden bg-white px-5 py-8">
+			<div className="pointer-events-none absolute inset-0 bg-grid-faint opacity-40" />
+			<div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-[#1A3BF5]/5 blur-[120px]" />
+
+			<section className="relative z-10 w-full max-w-[440px] rounded-[2.5rem] border border-neutral-200/80 bg-gradient-to-b from-white via-white to-neutral-50/50 p-8 shadow-[0_30px_80px_rgba(0,0,0,0.08)] sm:p-10 overflow-hidden">
+				<div className="pointer-events-none absolute inset-0 bg-grid-faint opacity-20" />
+
+				<RouterLink to="/" className="group relative z-10 mb-8 inline-flex items-center gap-3">
+					<img
+						src={logoCube}
+						alt="VidForge AI"
+						className="h-10 w-10 shrink-0 object-contain transition-transform duration-500 ease-out group-hover:rotate-[15deg] group-hover:scale-105"
+					/>
+					<div className="flex flex-col text-left">
+						<span className="font-heading text-lg font-extrabold leading-none tracking-tight text-neutral-900">
+							VidForge AI
+						</span>
+						<span className="mt-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-neutral-400">
+							AI video automation platform
+						</span>
+					</div>
+				</RouterLink>
+
+				<div className="relative z-10 mb-7 text-left">
+					<Title level={2} className="mb-1.5! font-heading! text-neutral-900!">
 						Welcome back
 					</Title>
-					<Text type="secondary">Sign in to continue to your workspace.</Text>
+					<Text className="text-neutral-500!">Sign in to continue to your workspace.</Text>
 				</div>
 
 				<Form<LoginFormValues>
@@ -71,6 +90,7 @@ export default function Login() {
 					onFinish={handleFinish}
 					onFinishFailed={handleFinishFailed}
 					requiredMark={false}
+					className="relative z-10"
 				>
 					<Form.Item
 						label="Email"
@@ -92,27 +112,28 @@ export default function Login() {
 						<Form.Item name="remember" valuePropName="checked" noStyle>
 							<Checkbox>Remember me</Checkbox>
 						</Form.Item>
-						<RouterLink to="/forgot-password" className="text-(--accent)! hover:underline">
+						<RouterLink to="/forgot-password" className="text-[#1A3BF5]! hover:underline">
 							Forgot password?
 						</RouterLink>
 					</div>
 
-					<Form.Item>
+					<Form.Item className="mb-0!">
 						<Button
 							type="primary"
 							htmlType="submit"
 							size="large"
 							loading={submitting}
 							block
+							className="h-12! rounded-full! bg-neutral-950! font-bold! hover:bg-black!"
 						>
 							Sign in
 						</Button>
 					</Form.Item>
 				</Form>
 
-				<Text className="mt-2 block text-center">
+				<Text className="relative z-10 mt-6 block text-center text-neutral-500!">
 					Don't have an account?{" "}
-					<RouterLink to="/register" className="text-(--accent)! hover:underline">
+					<RouterLink to="/register" className="text-[#1A3BF5]! font-semibold hover:underline">
 						Sign up
 					</RouterLink>
 				</Text>

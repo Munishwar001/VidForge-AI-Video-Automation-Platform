@@ -219,6 +219,27 @@ h1, h2, h3, h4, h5, h6 {
   100% { background-position: 50% 200%; }
 }
 
+/* Glowing dot that travels along the "How VidForge Works" connector line */
+.workflow-dot {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  border-radius: 9999px;
+  background: #1A3BF5;
+  box-shadow: 0 0 10px 3px rgba(26, 59, 245, 0.6);
+  animation: dot-travel 3.5s linear infinite;
+}
+
+@keyframes dot-travel {
+  0% { left: 0%; opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
 /* Bento card mouse-follow spotlight */
 .bento-card {
   position: relative;

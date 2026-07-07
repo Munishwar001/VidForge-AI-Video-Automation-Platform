@@ -7,6 +7,7 @@ import BorderGlow from "../components/ui/border-glow";
 import Reveal from "../components/ui/reveal";
 import CountUp from "../components/ui/count-up";
 import TiltCard from "../components/ui/tilt-card";
+import ShinyText from "../components/ui/shiny-text";
 import { useScrolled } from "../hooks/useScrolled";
 import { useActiveSection } from "../hooks/useActiveSection";
 
@@ -17,13 +18,6 @@ const LogoIcon = ({ large = false }: { large?: boolean }) => (
     alt="VidForge AI"
     className={`${large ? "w-11 h-11" : "w-10 h-10"} object-contain shrink-0 transition-transform duration-500 ease-out group-hover:rotate-[15deg] group-hover:scale-105`}
   />
-);
-
-// Check Icon for Pricing list
-const CheckIcon = () => (
-  <svg className="w-5 h-5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-  </svg>
 );
 
 // Feature Icons matching the screenshots
@@ -46,9 +40,22 @@ const VoiceGeneratorIcon = () => (
   </svg>
 );
 
-const SubtitleGeneratorIcon = () => (
+const SceneGenerationIcon = () => (
   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9 9h6v6H9V9z" />
+  </svg>
+);
+
+const AutoEditingIcon = () => (
+  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 9.172V5L8 4z" />
+  </svg>
+);
+
+const ExportFeatureIcon = () => (
+  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
   </svg>
 );
 
@@ -221,23 +228,83 @@ const VoiceStudioVisual = () => (
   </div>
 );
 
-const SubtitleTimelineVisual = () => (
+const BRollVisual = () => (
+  <div className="flex flex-col h-full gap-4 p-5">
+    <div className="flex items-center gap-1.5">
+      <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
+      <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
+      <span className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
+      <span className="ml-2 text-[10px] text-white/40 font-mono tracking-wide">vidforge — scene generator</span>
+    </div>
+    <div className="grid grid-cols-3 gap-2 flex-1">
+      {[
+        "from-amber-400/60 to-orange-500/60",
+        "from-[#4F7CFF]/60 to-[#1A3BF5]/60",
+        "from-teal-400/60 to-emerald-500/60",
+        "from-purple-400/60 to-indigo-500/60",
+        "from-cyan-400/60 to-[#4F7CFF]/60",
+        "from-rose-400/60 to-purple-500/60",
+      ].map((g, i) => (
+        <div key={i} className={`rounded-lg bg-gradient-to-br ${g} relative overflow-hidden`}>
+          <span className="absolute bottom-1 right-1.5 text-[8px] text-white/70 font-mono">B-roll {i + 1}</span>
+        </div>
+      ))}
+    </div>
+    <div className="inline-flex items-center gap-1.5 self-start bg-[#4F7CFF]/15 border border-[#4F7CFF]/30 text-[#a9bcff] text-[10px] font-bold px-2.5 py-1 rounded-full">
+      <span className="w-1.5 h-1.5 rounded-full bg-[#4F7CFF] animate-pulse" /> Generating scenes…
+    </div>
+  </div>
+);
+
+const SmartEditingVisual = () => (
   <div className="flex flex-col h-full gap-3 p-5">
-    <div className="relative flex-1 rounded-xl bg-gradient-to-br from-white/10 to-white/[0.02] border border-white/10 overflow-hidden flex items-end justify-center pb-4">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(79,124,255,0.18),transparent_60%)]" />
-      <span className="relative text-white text-xs font-bold bg-black/50 px-3 py-1.5 rounded-md backdrop-blur-sm">
-        "...half of jobs will be automated"
-      </span>
+    <div className="flex items-center gap-1.5">
+      <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
+      <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
+      <span className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
+      <span className="ml-2 text-[10px] text-white/40 font-mono tracking-wide">vidforge — auto editor</span>
     </div>
-    <div className="rounded-xl bg-white/5 border border-white/10 p-2.5 flex items-center gap-1 h-9">
-      {[6, 12, 8, 16, 10, 14, 7, 11, 9, 15, 6, 13, 8, 10, 12].map((h, i) => (
-        <span key={i} className="w-1 rounded-full bg-white/20" style={{ height: `${h}px` }} />
-      ))}
+    <div className="rounded-xl bg-white/5 border border-white/10 p-3 flex-1 flex flex-col gap-2 justify-center">
+      <span className="text-[10px] text-white/40 font-bold uppercase tracking-widest">Timeline</span>
+      <div className="flex gap-1 h-8">
+        {["from-[#1A3BF5] to-[#4F7CFF]", "from-[#4F7CFF] to-[#9b51e0]", "from-[#9b51e0] to-[#00D4FF]", "from-[#00D4FF] to-[#1A3BF5]"].map((g, i) => (
+          <div key={i} className={`flex-1 rounded-md bg-gradient-to-b ${g} opacity-70`} />
+        ))}
+      </div>
+      <div className="flex gap-1 h-3 mt-1">
+        {[6, 12, 8, 16, 10, 14, 7, 11, 9, 15, 6, 13].map((h, i) => (
+          <span key={i} className="w-1 rounded-full bg-white/20" style={{ height: `${h}px` }} />
+        ))}
+      </div>
+      <div className="flex gap-1.5 mt-1">
+        {[1, 2, 3].map((i) => (
+          <span key={i} className="flex-1 h-1.5 rounded-full bg-[#4F7CFF]/50" />
+        ))}
+      </div>
     </div>
-    <div className="flex gap-1.5">
-      {[1, 2, 3].map((i) => (
-        <span key={i} className="flex-1 h-1.5 rounded-full bg-[#4F7CFF]/50" />
-      ))}
+    <div className="inline-flex items-center gap-1.5 self-start bg-[#4F7CFF]/15 border border-[#4F7CFF]/30 text-[#a9bcff] text-[10px] font-bold px-2.5 py-1 rounded-full">
+      <span className="w-1.5 h-1.5 rounded-full bg-[#4F7CFF] animate-pulse" /> Syncing music &amp; captions…
+    </div>
+  </div>
+);
+
+const ExportVisual = () => (
+  <div className="flex flex-col h-full justify-between p-5 gap-4">
+    <div className="flex items-center gap-1.5">
+      <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
+      <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
+      <span className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
+      <span className="ml-2 text-[10px] text-white/40 font-mono tracking-wide">vidforge — export</span>
+    </div>
+    <div className="flex-1 flex flex-col items-center justify-center gap-3">
+      <span className="text-[11px] font-black text-white bg-white/10 border border-white/15 px-3 py-1.5 rounded-md tracking-wide">3840 × 2160 · 4K</span>
+      <div className="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
+        <div className="h-full w-[92%] bg-gradient-to-r from-[#1A3BF5] to-[#00D4FF] rounded-full" />
+      </div>
+      <span className="text-[10px] text-white/40 font-mono">Rendering… 92%</span>
+    </div>
+    <div className="inline-flex items-center gap-1.5 self-start bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[10px] font-bold px-2.5 py-1 rounded-full">
+      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Ready to download
     </div>
   </div>
 );
@@ -271,11 +338,27 @@ const showcaseFeatures = [
   },
   {
     number: "04",
-    icon: <SubtitleGeneratorIcon />,
-    title: "Auto Subtitles & Captions",
-    description: "Auto-sync stylish captions with dynamic emphasis, perfectly timed to every spoken word.",
-    bullets: ["Word-Level Sync", "Dynamic Styling Presets", "Multi-Language Export", "Platform-Safe Formatting"],
-    visual: <SubtitleTimelineVisual />,
+    icon: <SceneGenerationIcon />,
+    title: "B-Roll Generator",
+    description: "Generate supporting visuals and B-roll footage that match your narrative and brand style automatically.",
+    bullets: ["Context-Aware Visual Matching", "AI-Generated & Stock Blending", "Consistent Brand Styling", "Automatic Scene Pacing"],
+    visual: <BRollVisual />,
+  },
+  {
+    number: "05",
+    icon: <AutoEditingIcon />,
+    title: "Smart Editing",
+    description: "Synchronize scenes, subtitles, transitions and music into one polished, broadcast-ready cut.",
+    bullets: ["Auto Scene Transitions", "Subtitle & Caption Sync", "Adaptive Music Scoring", "Pacing-Aware Trimming"],
+    visual: <SmartEditingVisual />,
+  },
+  {
+    number: "06",
+    icon: <ExportFeatureIcon />,
+    title: "4K Export",
+    description: "Export production-ready videos in crisp 4K, optimized for every platform in one click.",
+    bullets: ["3840×2160 Ultra HD", "Platform-Ready Formats", "Lossless Quality Presets", "Instant Cloud Delivery"],
+    visual: <ExportVisual />,
   },
 ];
 
@@ -379,24 +462,11 @@ const bentoTiles = [
 
 const navLinks = [
   { label: "Features", href: "#features" },
-  { label: "Workflow", href: "#workflow" },
-  { label: "Pricing", href: "#pricing" },
   { label: "Testimonials", href: "#testimonials" },
   { label: "FAQ", href: "#faq" },
 ];
 
 const navSectionIds = navLinks.map((item) => item.href.slice(1));
-
-// ---------- Workflow timeline steps ----------
-
-const workflowSteps = [
-  "Write Prompt",
-  "Generate Script",
-  "Create Voice",
-  "Generate Scenes",
-  "Auto Edit",
-  "Export",
-];
 
 // ---------- Powered By: infrastructure logo marquee ----------
 
@@ -466,6 +536,120 @@ function MarqueeRow({
           >
             {logo.name}
           </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ---------- Testimonials: continuously scrolling card marquee ----------
+
+const testimonials = [
+  {
+    initials: "SC",
+    color: "bg-[#4F7CFF]/15 border border-[#4F7CFF]/30 text-[#a9bcff]",
+    name: "Sarah Chen",
+    role: "TikTok Creator, @facelesstech",
+    quote: "VidForge completely overhauled my social workflow. I went from spending 12 hours manually stitching background assets and sync lines to putting in a single prompt and having a completed, high-engagement TikTok reel ready in under 5 minutes.",
+  },
+  {
+    initials: "MK",
+    color: "bg-blue-500/15 border border-blue-400/30 text-blue-300",
+    name: "Marcus Kovac",
+    role: "Content Lead at NexaTech",
+    quote: "The AI voice synthesis output is scary realistic. We compared ElevenLabs integrations on VidForge with our custom layouts and the auto script-to-voice flow here produced identical results in half the clicks.",
+  },
+  {
+    initials: "DB",
+    color: "bg-pink-500/15 border border-pink-400/30 text-pink-300",
+    name: "Diana Brooks",
+    role: "VP Marketing, Synthetix",
+    quote: "We generate up to 50 localized videos in batches for our global marketing campaigns. VidForge AI saves us thousands of dollars every single month in voice actors, editing contractors, and visual rendering.",
+  },
+  {
+    initials: "JR",
+    color: "bg-emerald-500/15 border border-emerald-400/30 text-emerald-300",
+    name: "Jordan Reyes",
+    role: "Founder, Loopcast Media",
+    quote: "Our agency batch-produces client videos every week. VidForge cut our turnaround from three days to under two hours without sacrificing quality.",
+  },
+  {
+    initials: "AT",
+    color: "bg-amber-500/15 border border-amber-400/30 text-amber-300",
+    name: "Aisha Thompson",
+    role: "Growth Lead, Nimbusly",
+    quote: "The auto-editing and caption sync alone replaced two freelance editors on our team. It genuinely feels like magic every time a render finishes.",
+  },
+  {
+    initials: "LP",
+    color: "bg-cyan-500/15 border border-cyan-400/30 text-cyan-300",
+    name: "Leo Park",
+    role: "Independent Creator",
+    quote: "I run three faceless YouTube channels solo now. VidForge's prompt-to-video pipeline is the entire reason that's even possible.",
+  },
+];
+
+const TestimonialCard = ({ t }: { t: (typeof testimonials)[number] }) => (
+  <div className="w-95 shrink-0 bg-neutral-950 border border-white/10 p-6 rounded-3xl shadow-[0_20px_45px_-15px_rgba(0,0,0,0.4)] flex flex-col justify-between text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#4F7CFF]/40 hover:shadow-[0_25px_55px_-15px_rgba(26,59,245,0.35)]">
+    <p className="text-sm text-white/80 font-semibold leading-relaxed">"{t.quote}"</p>
+    <div className="mt-6 flex items-center gap-3">
+      <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${t.color}`}>
+        {t.initials}
+      </div>
+      <div>
+        <h4 className="text-sm font-bold text-white">{t.name}</h4>
+        <p className="text-[10px] text-white/40 font-bold">{t.role}</p>
+      </div>
+    </div>
+  </div>
+);
+
+function TestimonialMarquee({
+  items,
+  direction,
+  duration,
+}: {
+  items: typeof testimonials;
+  direction: "left" | "right";
+  duration: number;
+}) {
+  const doubled = [...items, ...items];
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const tweenRef = useRef<gsap.core.Tween | null>(null);
+
+  // GSAP-driven, same pattern as the Powered By logo marquee — runs off its own
+  // rAF ticker so motion stays smooth regardless of parent re-renders.
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const from = direction === "left" ? 0 : -50;
+    const to = direction === "left" ? -50 : 0;
+
+    gsap.set(track, { xPercent: from });
+    tweenRef.current = gsap.to(track, {
+      xPercent: to,
+      duration,
+      ease: "none",
+      repeat: -1,
+    });
+
+    return () => {
+      tweenRef.current?.kill();
+    };
+  }, [direction, duration]);
+
+  return (
+    <div
+      className="marquee-row"
+      onMouseEnter={() => tweenRef.current?.pause()}
+      onMouseLeave={() => tweenRef.current?.resume()}
+    >
+      <div ref={trackRef} className="marquee-track gap-6 py-2">
+        {doubled.map((t, i) => (
+          <TestimonialCard key={`${t.name}-${i}`} t={t} />
         ))}
       </div>
     </div>
@@ -625,7 +809,7 @@ export default function Landing() {
 
         </div>
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[96rem] px-4 sm:px-6 lg:px-8">
           {/* POWERED BY SECTION */}
           <div className="relative pt-16 pb-[72px]">
             <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10">
@@ -649,7 +833,7 @@ export default function Landing() {
               </p>
             </Reveal>
 
-            {/* Break out of the max-w-7xl page container and re-align to the Hero card's own width */}
+            {/* Break out of the page container and re-align to the Hero card's own width */}
             <div className="relative left-1/2 -translate-x-1/2 w-screen mt-9">
               <div className="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8">
                 <Reveal variant="scale" delay={150}>
@@ -681,11 +865,9 @@ export default function Landing() {
           </div>
 
           {/* FEATURES SECTION */}
-          <div id="features" className="scroll-mt-28 max-w-7xl mx-auto relative">
+          <div id="features" className="scroll-mt-28 max-w-[96rem] mx-auto relative">
             {/* Decorative floating elements — blur circles, cubes, grid, particles */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10">
-              {/* Subtle wash that differentiates this section from the pure-white Powered By above */}
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(79,124,255,0.03),transparent_70%)]" />
               <div className="absolute inset-0 bg-grid-faint opacity-30 [mask-image:radial-gradient(ellipse_60%_60%_at_50%_20%,black,transparent)]" />
               <div className="absolute -top-16 left-[6%] w-72 h-72 rounded-full bg-[#1A3BF5]/[0.07] blur-[100px] animate-drift-slow" />
               <div className="absolute top-1/3 right-[2%] w-80 h-80 rounded-full bg-purple-400/[0.07] blur-[110px] animate-drift-reverse" />
@@ -700,32 +882,11 @@ export default function Landing() {
               <div className="hidden lg:block absolute bottom-1/4 right-[12%] w-1.5 h-1.5 rounded-full bg-cyan-400/60 animate-particle" style={{ animationDelay: "2s" }} />
             </div>
 
-            {/* Section Header */}
-            <Reveal className="text-center max-w-3xl mx-auto mb-8">
-              <div className="inline-flex items-center gap-2 border border-neutral-200/80 bg-white/95 px-4.5 py-1.5 rounded-full text-xs font-bold text-neutral-800 shadow-sm mb-6">
-                <span className="text-[#1A3BF5] font-bold">⚡</span> AI Automation Platform
-              </div>
-              <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-neutral-900 leading-tight font-heading">
-                Everything You Need <br className="hidden md:block" />
-                To Produce Professional AI Videos
-              </h2>
-              <p className="text-lg text-neutral-500 font-medium mt-6 leading-relaxed max-w-2xl mx-auto">
-                From prompt writing to cinematic export, VidForge AI automates every step of your creative workflow inside one intelligent platform.
-              </p>
-            </Reveal>
-
-            {/* Stats strip */}
-            <Reveal variant="scale" delay={150} className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4 mb-24 md:mb-32">
-              {[
-                { end: 4200, suffix: "+", label: "Videos Rendered" },
-                { end: 60, suffix: "+", label: "AI Voices" },
-                { end: 98, suffix: "%", label: "Automation Accuracy" },
-              ].map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <CountUp end={stat.end} suffix={stat.suffix} className="text-2xl md:text-3xl font-black text-neutral-900 font-heading" />
-                  <div className="text-xs font-bold text-neutral-400 uppercase tracking-widest mt-1">{stat.label}</div>
-                </div>
-              ))}
+            {/* Section identity — keeps Features visually distinct from the Workflow section above it */}
+            <Reveal className="text-center mb-24 md:mb-32">
+              <h3 className="text-2xl md:text-4xl font-extrabold text-neutral-900 tracking-tight font-heading">
+                Everything You Need To Produce Professional AI Videos
+              </h3>
             </Reveal>
 
             {/* Alternating Feature Showcase */}
@@ -825,221 +986,24 @@ export default function Landing() {
               </div>
             </div>
 
-            {/* Workflow Timeline */}
-            <div className="mt-28 md:mt-36">
-              <Reveal className="text-center max-w-2xl mx-auto mb-16">
-                <span className="text-xs uppercase font-extrabold text-neutral-400 tracking-widest">The Process</span>
-                <h3 className="text-2xl md:text-4xl font-extrabold text-neutral-900 tracking-tight mt-3 font-heading">
-                  From one prompt to a finished film.
-                </h3>
-              </Reveal>
-
-              {/* Desktop: horizontal nodes */}
-              <div className="hidden md:flex items-start max-w-6xl mx-auto px-4">
-                {workflowSteps.map((step, i) => (
-                  <div key={step} className={`flex items-start ${i < workflowSteps.length - 1 ? "flex-1" : ""}`}>
-                    <Reveal variant="scale" delay={i * 100} className="flex flex-col items-center text-center w-28 shrink-0">
-                      <div className="w-16 h-16 rounded-full bg-white/80 backdrop-blur-md border border-neutral-200 shadow-[0_8px_24px_rgba(26,59,245,0.12)] flex items-center justify-center text-[#1A3BF5] font-black text-lg hover:scale-110 hover:border-[#1A3BF5]/50 transition-all duration-300">
-                        0{i + 1}
-                      </div>
-                      <span className="text-sm font-bold text-neutral-900 mt-4">{step}</span>
-                    </Reveal>
-                    {i < workflowSteps.length - 1 && (
-                      <div className="workflow-line h-[2px] flex-1 mt-8 rounded-full opacity-60" />
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {/* Mobile: vertical nodes */}
-              <div className="md:hidden flex flex-col items-center max-w-xs mx-auto">
-                {workflowSteps.map((step, i) => (
-                  <div key={step} className="flex flex-col items-center">
-                    <Reveal variant="scale" delay={i * 80} className="flex flex-col items-center">
-                      <div className="w-14 h-14 rounded-full bg-white/80 backdrop-blur-md border border-neutral-200 shadow-sm flex items-center justify-center text-[#1A3BF5] font-black">
-                        0{i + 1}
-                      </div>
-                      <span className="text-sm font-bold text-neutral-900 mt-3 mb-1">{step}</span>
-                    </Reveal>
-                    {i < workflowSteps.length - 1 && <div className="workflow-line-v w-[2px] h-10 rounded-full opacity-60" />}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <SectionDivider />
-
-          {/* WORKFLOW SECTION */}
-          <div id="workflow" className="scroll-mt-28 max-w-4xl mx-auto">
-            <span className="text-xs uppercase font-extrabold text-neutral-400 tracking-widest block text-center mb-3">Workflow</span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-neutral-900 text-center tracking-tight mb-10 font-heading">
-              A seamless production pipeline from prompt to publish.
-            </h2>
-
-            <div className="rounded-[2rem] border border-neutral-200/80 bg-white p-6 md:p-8 shadow-lg">
-              <div className="divide-y divide-neutral-100">
-                {[
-                  { name: "Prompt", desc: "Start with a single sentence description of your concept" },
-                  { name: "AI writes script", desc: "High-engagement script generated in seconds" },
-                  { name: "Voice Generation", desc: "Select from dozens of hyper-realistic voices" },
-                  { name: "Scene Creation", desc: "Relevant stock and AI generated clips matched to script beats" },
-                  { name: "Video Rendering", desc: "Automatic editing, pacing, music, and subtitles overlay" },
-                  { name: "Export", desc: "Download ready-to-share MP4 assets instantly" }
-                ].map((step, sIdx) => (
-                  <div key={step.name} className="py-5 flex flex-col md:flex-row md:items-center justify-between text-left first:pt-0 last:pb-0 gap-2">
-                    <span className="text-lg font-bold text-neutral-900 flex items-center gap-4">
-                      <span className="text-xs text-neutral-300 font-mono font-bold">0{sIdx + 1}</span>
-                      {step.name}
-                    </span>
-                    <span className="text-sm text-neutral-500 font-medium">{step.desc}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <SectionDivider />
-
-          {/* PRICING SECTION */}
-          <div id="pricing" className="scroll-mt-28 max-w-6xl mx-auto">
-            <span className="text-xs uppercase font-extrabold text-neutral-400 tracking-widest block text-center mb-3">Pricing Plans</span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-neutral-900 text-center tracking-tight mb-16 font-heading">
-              Choose the perfect plan for your scale.
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-              {/* Starter Plan */}
-              <div className="bg-white border border-neutral-200/80 rounded-[2rem] p-8 shadow-sm flex flex-col justify-between hover:border-neutral-300 transition-all duration-300">
-                <div>
-                  <span className="text-xs uppercase font-extrabold text-neutral-400 tracking-widest">Starter</span>
-                  <div className="mt-4 flex items-baseline gap-1">
-                    <span className="text-4xl font-extrabold text-neutral-900 font-heading">$29</span>
-                    <span className="text-sm font-semibold text-neutral-400">/mo</span>
-                  </div>
-                  <p className="text-xs text-neutral-500 mt-2 font-medium">Perfect for starting content creation and faceless channel automation setups.</p>
-                  
-                  <ul className="mt-8 space-y-3 text-xs font-semibold text-neutral-700">
-                    <li className="flex items-center gap-2"><CheckIcon /> 30 minutes of video export / mo</li>
-                    <li className="flex items-center gap-2"><CheckIcon /> 1080p HD Export Option</li>
-                    <li className="flex items-center gap-2"><CheckIcon /> 20+ Premium voices & languages</li>
-                    <li className="flex items-center gap-2"><CheckIcon /> Auto captions generator</li>
-                  </ul>
-                </div>
-                <div className="mt-8">
-                  <Link to="/register" className="block text-center w-full py-3.5 bg-neutral-100 hover:bg-neutral-200 rounded-xl text-xs font-extrabold text-neutral-800 transition-all shadow-sm">
-                    Start Free Trial
-                  </Link>
-                </div>
-              </div>
-
-              {/* Pro Plan */}
-              <div className="bg-white border-2 border-[#1A3BF5] rounded-[2rem] p-8 shadow-md flex flex-col justify-between relative hover:-translate-y-1 transition-all duration-300">
-                <div className="absolute top-0 right-8 -translate-y-1/2 bg-[#1A3BF5] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
-                  Most Popular
-                </div>
-                <div>
-                  <span className="text-xs uppercase font-extrabold text-[#1A3BF5] tracking-widest">Pro</span>
-                  <div className="mt-4 flex items-baseline gap-1">
-                    <span className="text-4xl font-extrabold text-neutral-900 font-heading">$79</span>
-                    <span className="text-sm font-semibold text-neutral-400">/mo</span>
-                  </div>
-                  <p className="text-xs text-neutral-500 mt-2 font-medium">Best for professional content marketers, channels, and social growth agency setups.</p>
-                  
-                  <ul className="mt-8 space-y-3 text-xs font-semibold text-neutral-700">
-                    <li className="flex items-center gap-2"><CheckIcon /> 180 minutes of video export / mo</li>
-                    <li className="flex items-center gap-2"><CheckIcon /> 4K Ultra-HD Export Option</li>
-                    <li className="flex items-center gap-2"><CheckIcon /> 50+ Custom voices & languages</li>
-                    <li className="flex items-center gap-2"><CheckIcon /> Full custom branding kits</li>
-                    <li className="flex items-center gap-2"><CheckIcon /> Auto translation module</li>
-                  </ul>
-                </div>
-                <div className="mt-8">
-                  <Link to="/register" className="block text-center w-full py-3.5 bg-black hover:bg-neutral-900 rounded-xl text-xs font-extrabold text-white transition-all shadow-md">
-                    Upgrade to Pro
-                  </Link>
-                </div>
-              </div>
-
-              {/* Enterprise Plan */}
-              <div className="bg-white border border-neutral-200/80 rounded-[2rem] p-8 shadow-sm flex flex-col justify-between hover:border-neutral-300 transition-all duration-300">
-                <div>
-                  <span className="text-xs uppercase font-extrabold text-neutral-400 tracking-widest">Enterprise</span>
-                  <div className="mt-4 flex items-baseline">
-                    <span className="text-4xl font-extrabold text-neutral-900 font-heading">Custom</span>
-                  </div>
-                  <p className="text-xs text-neutral-500 mt-2 font-medium">For custom scale, private LLM templates, automated APIs, and dedicated server queues.</p>
-                  
-                  <ul className="mt-8 space-y-3 text-xs font-semibold text-neutral-700">
-                    <li className="flex items-center gap-2"><CheckIcon /> Unlimited rendering minutes</li>
-                    <li className="flex items-center gap-2"><CheckIcon /> Full system REST API Access</li>
-                    <li className="flex items-center gap-2"><CheckIcon /> Custom AI model fine-tuning</li>
-                    <li className="flex items-center gap-2"><CheckIcon /> Dedicated Support channels</li>
-                    <li className="flex items-center gap-2"><CheckIcon /> Sync custom voice clones</li>
-                  </ul>
-                </div>
-                <div className="mt-8">
-                  <button className="w-full py-3.5 bg-white hover:bg-neutral-50 border border-neutral-200 rounded-xl text-xs font-bold text-neutral-800 transition-all shadow-sm">
-                    Talk to Sales
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
 
           <SectionDivider />
 
           {/* TESTIMONIALS SECTION */}
-          <div id="testimonials" className="scroll-mt-28 max-w-6xl mx-auto">
-            <span className="text-xs uppercase font-extrabold text-neutral-400 tracking-widest block text-center mb-3">Testimonials</span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-neutral-900 text-center tracking-tight mb-16 font-heading">
-              Loved by Automation Creators.
-            </h2>
+          <div id="testimonials" className="scroll-mt-28 relative">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <span className="text-xs uppercase font-extrabold text-neutral-400 tracking-widest block text-center mb-3">Testimonials</span>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-neutral-900 text-center tracking-tight mb-16 font-heading">
+                Loved by Automation Creators.
+              </h2>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-              <div className="bg-white border border-neutral-200/80 p-6 rounded-3xl shadow-sm flex flex-col justify-between">
-                <p className="text-sm text-neutral-700 font-semibold leading-relaxed">
-                  "VidForge completely overhauled my social workflow. I went from spending 12 hours manually stitching background assets and sync lines to putting in a single prompt and having a completed, high-engagement TikTok reel ready in under 5 minutes."
-                </p>
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center font-bold text-[#1A3BF5] text-xs">
-                    SC
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-neutral-900">Sarah Chen</h4>
-                    <p className="text-[10px] text-neutral-400 font-bold">TikTok Creator, @facelesstech</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white border border-neutral-200/80 p-6 rounded-3xl shadow-sm flex flex-col justify-between">
-                <p className="text-sm text-neutral-700 font-semibold leading-relaxed">
-                  "The AI voice synthesis output is scary realistic. We compared ElevenLabs integrations on VidForge with our custom layouts and the auto script-to-voice flow here produced identical results in half the clicks."
-                </p>
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600 text-xs">
-                    MK
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-neutral-900">Marcus Kovac</h4>
-                    <p className="text-[10px] text-neutral-400 font-bold">Content Lead at NexaTech</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white border border-neutral-200/80 p-6 rounded-3xl shadow-sm flex flex-col justify-between">
-                <p className="text-sm text-neutral-700 font-semibold leading-relaxed">
-                  "We generate up to 50 localized videos in batches for our global marketing campaigns. VidForge AI saves us thousands of dollars every single month in voice actors, editing contractors, and visual rendering."
-                </p>
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center font-bold text-pink-600 text-xs">
-                    DB
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-neutral-900">Diana Brooks</h4>
-                    <p className="text-[10px] text-neutral-400 font-bold">VP Marketing, Synthetix</p>
-                  </div>
-                </div>
+            {/* Break out of the page container for a full-width, continuously scrolling card marquee */}
+            <div className="relative left-1/2 -translate-x-1/2 w-screen">
+              <div className="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-6">
+                <TestimonialMarquee items={testimonials} direction="left" duration={55} />
+                <TestimonialMarquee items={[...testimonials].reverse()} direction="right" duration={50} />
               </div>
             </div>
           </div>
@@ -1072,19 +1036,31 @@ export default function Landing() {
                   a: "Absolutely! The timeline editor is interactive. You can modify scripts, replace generated visuals, choose different voice models, or adjust the background music volumes directly in the studio."
                 }
               ].map((faq, idx) => (
-                <div key={idx} className="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden text-left">
-                  <button 
+                <div
+                  key={idx}
+                  onMouseEnter={() => setOpenFaqIndex(idx)}
+                  className="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden text-left"
+                >
+                  <button
                     onClick={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)}
                     className="w-full px-6 py-5 flex items-center justify-between text-left font-bold text-neutral-900 hover:bg-neutral-50 transition-colors focus:outline-none"
                   >
                     <span>{faq.q}</span>
                     <span className="text-[#1A3BF5] font-black">{openFaqIndex === idx ? "−" : "+"}</span>
                   </button>
-                  {openFaqIndex === idx && (
-                    <div className="px-6 pb-5 pt-2 text-sm text-neutral-500 font-medium border-t border-neutral-100 bg-neutral-50/50">
-                      {faq.a}
+                  <div
+                    className="grid transition-[grid-template-rows] duration-300 ease-in-out"
+                    style={{ gridTemplateRows: openFaqIndex === idx ? "1fr" : "0fr" }}
+                  >
+                    <div className="overflow-hidden">
+                      <div
+                        className="px-6 pb-5 pt-2 text-sm text-neutral-500 font-medium border-t border-neutral-100 bg-neutral-50/50 transition-opacity duration-300"
+                        style={{ opacity: openFaqIndex === idx ? 1 : 0 }}
+                      >
+                        {faq.a}
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -1096,7 +1072,15 @@ export default function Landing() {
           <div className="max-w-5xl mx-auto rounded-[2.5rem] border border-neutral-200 bg-gradient-to-b from-white to-neutral-50/50 p-8 md:p-16 shadow-xl text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-grid-faint pointer-events-none opacity-20" />
             <h2 className="text-3xl md:text-5xl font-extrabold text-neutral-900 tracking-tight leading-tight max-w-2xl mx-auto font-heading">
-              Let AI Produce Your Next <span className="text-[#1A3BF5]">Viral Video</span>
+              Let AI Produce Your Next{" "}
+              <ShinyText
+                text="Viral Video"
+                color="#1A3BF5"
+                shineColor="#00D4FF"
+                speed={2}
+                spread={120}
+                direction="left"
+              />
             </h2>
             <p className="text-neutral-500 font-medium max-w-md mx-auto mt-4 leading-relaxed">
               Join thousands of creators, marketers, and startups automating their video production from single prompts.
@@ -1116,7 +1100,7 @@ export default function Landing() {
 
       {/* FOOTER */}
       <footer className="border-t border-neutral-100 bg-neutral-50/50 py-16 relative z-10 text-left">
-        <div className="mx-auto max-w-7xl px-6 md:px-8 grid grid-cols-2 md:grid-cols-5 gap-8 items-start">
+        <div className="mx-auto max-w-[96rem] px-6 md:px-8 grid grid-cols-2 md:grid-cols-5 gap-8 items-start">
           <div className="col-span-2 space-y-4">
             <div className="flex items-center gap-3">
               <LogoIcon />
@@ -1137,8 +1121,6 @@ export default function Landing() {
             <span className="text-xs uppercase font-extrabold text-neutral-950 tracking-wider">Product</span>
             <ul className="mt-4 space-y-2 text-xs font-semibold text-neutral-500">
               <li><a href="#features" className="hover:text-[#1A3BF5] transition-colors">Features</a></li>
-              <li><a href="#workflow" className="hover:text-[#1A3BF5] transition-colors">Workflow</a></li>
-              <li><a href="#pricing" className="hover:text-[#1A3BF5] transition-colors">Pricing</a></li>
               <li><a href="#" className="hover:text-[#1A3BF5] transition-colors">API Docs</a></li>
             </ul>
           </div>
