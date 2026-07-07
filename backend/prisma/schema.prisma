@@ -1,0 +1,225 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProjectType {
+  VIDEO
+  IMAGE
+}
+
+enum ProjectStatus {
+  COMPLETED
+  PROCESSING
+  FAILED
+}
+
+enum JobStage {
+  QUEUED
+  PREPARING
+  GENERATING
+  RENDERING
+  FINALIZING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+}
+
+enum ActivityType {
+  GENERATED
+  UPLOADED
+  DELETED
+  FAVORITED
+  FAILED
+}
+
+model Role {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  users     UserRole[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("roles")
+}
+
+model User {
+  id          String               @id @default(uuid())
+  name        String
+  email       String               @unique
+  password    String
+  roles       UserRole[]
+  resetTokens PasswordResetToken[]
+
+  projects       Project[]
+  mediaFolders   MediaFolder[]
+  mediaItems     MediaItem[]
+  promptHistory  PromptHistoryEntry[]
+  generationJobs GenerationJob[]
+  apiKeys        ApiKey[]
+  activityItems  ActivityItem[]
+
+  creditsRemaining         Int     @default(340)
+  creditsTotal             Int     @default(500)
+  totalVideosGenerated     Int     @default(0)
+  totalImagesGenerated     Int     @default(0)
+  storageUsedBytes         Float   @default(0)
+  storageLimitBytes        Float   @default(53687091200)
+  theme                    String  @default("light")
+  notifyGenerationComplete Boolean @default(true)
+  notifyCreditAlerts       Boolean @default(true)
+  notifyWeeklySummary      Boolean @default(true)
+  notifyProductUpdates     Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model UserRole {
+  userId    String
+  roleId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, roleId])
+  @@index([roleId])
+  @@map("user_roles")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  token     String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@map("password_reset_tokens")
+}
+
+model Project {
+  id          String        @id @default(uuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  prompt      String
+  type        ProjectType
+  status      ProjectStatus @default(COMPLETED)
+  thumbnail   String
+  duration    Int?
+  resolution  String?
+  creditsUsed Int           @default(0)
+  favorite    Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([userId])
+  @@map("projects")
+}
+
+model MediaFolder {
+  id        String      @id @default(uuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  items     MediaItem[]
+  createdAt DateTime    @default(now())
+
+  @@index([userId])
+  @@map("media_folders")
+}
+
+model MediaItem {
+  id        String       @id @default(uuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  type      MediaType
+  url       String
+  thumbnail String
+  folderId  String?
+  folder    MediaFolder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  sizeBytes Int
+  createdAt DateTime     @default(now())
+
+  @@index([userId])
+  @@index([folderId])
+  @@map("media_items")
+}
+
+model PromptHistoryEntry {
+  id        String      @id @default(uuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  text      String
+  type      ProjectType
+  favorite  Boolean     @default(false)
+  createdAt DateTime    @default(now())
+
+  @@index([userId])
+  @@map("prompt_history_entries")
+}
+
+model GenerationJob {
+  id               String      @id @default(uuid())
+  userId           String
+  user             User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title            String
+  prompt           String
+  type             ProjectType
+  stage            JobStage    @default(QUEUED)
+  progress         Int         @default(0)
+  etaSeconds       Int?
+  credits          Int
+  resultProjectIds String[]    @default([])
+  error      String?
+  settings   Json
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([userId])
+  @@map("generation_jobs")
+}
+
+model ApiKey {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label      String
+  keyPreview String
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@map("api_keys")
+}
+
+model ActivityItem {
+  id        String       @id @default(uuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      ActivityType
+  message   String
+  createdAt DateTime     @default(now())
+
+  @@index([userId])
+  @@map("activity_items")
+}
