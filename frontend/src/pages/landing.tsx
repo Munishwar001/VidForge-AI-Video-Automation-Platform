@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
+import { motion, AnimatePresence } from "motion/react";
 import heroAnimation from "../assets/animation2.mp4";
 import logoCube from "../assets/cubeImage.jpg";
 import BorderGlow from "../components/ui/border-glow";
@@ -468,6 +469,11 @@ const navLinks = [
 
 const navSectionIds = navLinks.map((item) => item.href.slice(1));
 
+// Shared alignment container for the navbar + hero (and every full-width
+// section below) — one width language for the whole page: fluid on tablet,
+// capped at 1200px on laptop, 1400px on desktop.
+const CONTAINER_CLASS = "mx-auto w-full max-w-full lg:max-w-[1200px] xl:max-w-[1400px] px-4 sm:px-6 lg:px-8";
+
 // ---------- Powered By: infrastructure logo marquee ----------
 
 const poweredByLogos = [
@@ -658,7 +664,8 @@ function TestimonialMarquee({
 
 export default function Landing() {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
-  const scrolled = useScrolled(12);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const scrolled = useScrolled();
   const activeSection = useActiveSection(navSectionIds);
 
   return (
@@ -666,74 +673,149 @@ export default function Landing() {
       {/* Decorative Grid Lines */}
       <div className="absolute inset-0 bg-grid-faint pointer-events-none opacity-40 z-0" />
 
-      {/* NAVBAR */}
-      <header className="sticky top-0 z-50 w-full flex justify-center px-4 pt-4 pb-2">
-        <div
-          className={`w-full max-w-[1320px] h-[84px] flex items-center justify-between rounded-full border border-white/60 px-8 md:px-10 transition-all duration-500 ease-out ${
-            scrolled
-              ? "bg-white/90 backdrop-blur-[22px] shadow-[0_18px_55px_rgba(0,0,0,0.10)] scale-[0.99]"
-              : "bg-white/80 backdrop-blur-[18px] shadow-[0_12px_40px_rgba(0,0,0,0.06)] scale-100"
-          }`}
-        >
-          <Link to="/" className="group flex items-center gap-3">
-            <LogoIcon large />
-            <div className="flex flex-col text-left">
-              <span className="text-xl font-extrabold text-neutral-900 tracking-tight leading-none">VidForge AI</span>
-              <span className="text-[11px] text-neutral-400 font-semibold tracking-[0.15em] uppercase mt-1">AI video automation platform</span>
-            </div>
-          </Link>
+      {/* NAVBAR — shares CONTAINER_CLASS with the Hero so both align on the same edges */}
+      <header className="sticky top-0 z-50 w-full pt-4">
+        <div className={`${CONTAINER_CLASS} flex justify-center`}>
+          <motion.div
+            animate={{
+              width: scrolled ? "88%" : "100%",
+              height: scrolled ? 68 : 88,
+              backgroundColor: scrolled ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.65)",
+              backdropFilter: scrolled ? "blur(32px)" : "blur(24px)",
+              boxShadow: scrolled ? "0 20px 60px rgba(0,0,0,0.12)" : "0 8px 30px rgba(0,0,0,0.05)",
+            }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="flex w-full items-center justify-between rounded-full border border-white/35 px-6 md:px-8"
+          >
+            <Link to="/" className="group flex items-center gap-3 shrink-0">
+              <LogoIcon large />
+              <div className="flex flex-col text-left">
+                <span className="text-xl font-extrabold text-neutral-900 tracking-tight leading-none">VidForge AI</span>
+                <span className="hidden sm:block text-[11px] text-neutral-400 font-semibold tracking-[0.15em] uppercase mt-1">AI video automation platform</span>
+              </div>
+            </Link>
 
-          <nav className="hidden md:flex items-center gap-10">
-            {navLinks.map((item) => {
-              const isActive = activeSection === item.href.slice(1);
-              return (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className={`group relative text-sm font-semibold py-1 transition-colors duration-300 ${
-                    isActive ? "text-neutral-950" : "text-neutral-600 hover:text-neutral-950"
-                  }`}
-                >
-                  {item.label}
-                  <span
-                    className={`absolute -bottom-0.5 left-0 h-[2px] rounded-full bg-[#1A3BF5] transition-all duration-300 ${
-                      isActive ? "w-full" : "w-0 group-hover:w-full"
+            <nav className="hidden md:flex items-center gap-10">
+              {navLinks.map((item) => {
+                const isActive = activeSection === item.href.slice(1);
+                return (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className={`group relative text-sm font-semibold py-1 transition-colors duration-300 ${
+                      isActive ? "text-neutral-950" : "text-neutral-600 hover:text-neutral-950"
                     }`}
-                  />
-                </a>
-              );
-            })}
-          </nav>
+                  >
+                    {item.label}
+                    <span
+                      className={`absolute -bottom-0.5 left-0 h-[2px] rounded-full bg-[#1A3BF5] transition-all duration-300 ${
+                        isActive ? "w-full" : "w-0 group-hover:w-full"
+                      }`}
+                    />
+                  </a>
+                );
+              })}
+            </nav>
 
-          <div className="flex items-center gap-6">
-            <Link
-              to="/login"
-              className="group inline-flex items-center gap-1.5 text-sm font-medium text-neutral-600 opacity-80 transition-all duration-300 hover:opacity-100 hover:text-neutral-950"
-            >
-              Sign In
-              <svg
-                className="w-3.5 h-3.5 -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2.5"
+            <div className="hidden md:flex items-center gap-6 shrink-0">
+              <Link
+                to="/login"
+                className="group inline-flex items-center gap-1.5 text-sm font-medium text-neutral-600 opacity-80 transition-all duration-300 hover:opacity-100 hover:text-neutral-950"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-            <Link
-              to="/register"
-              className="inline-flex items-center justify-center h-12 px-7 bg-black hover:bg-neutral-900 text-white text-sm font-bold rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-[0_14px_34px_rgba(0,0,0,0.28)]"
+                Sign In
+                <svg
+                  className="w-3.5 h-3.5 -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+              <Link
+                to="/register"
+                className="inline-flex items-center justify-center h-12 px-7 bg-black hover:bg-neutral-900 text-white text-sm font-bold rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-[0_14px_34px_rgba(0,0,0,0.28)]"
+              >
+                Get Started
+              </Link>
+            </div>
+
+            {/* Mobile hamburger toggle */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen((v) => !v)}
+              aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
+              className="md:hidden relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
             >
-              Get Started
-            </Link>
-          </div>
+              <span className="relative flex h-4 w-5 flex-col justify-between">
+                <motion.span
+                  animate={{ rotate: mobileMenuOpen ? 45 : 0, y: mobileMenuOpen ? 7 : 0 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  className="h-[2px] w-full rounded-full bg-neutral-900 origin-center"
+                />
+                <motion.span
+                  animate={{ opacity: mobileMenuOpen ? 0 : 1 }}
+                  transition={{ duration: 0.2 }}
+                  className="h-[2px] w-full rounded-full bg-neutral-900"
+                />
+                <motion.span
+                  animate={{ rotate: mobileMenuOpen ? -45 : 0, y: mobileMenuOpen ? -7 : 0 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  className="h-[2px] w-full rounded-full bg-neutral-900 origin-center"
+                />
+              </span>
+            </button>
+          </motion.div>
         </div>
+
+        {/* Mobile dropdown menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.98 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="md:hidden absolute left-4 right-4 top-[calc(100%+8px)] rounded-3xl border border-white/35 bg-white/95 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] p-6"
+            >
+              <nav className="flex flex-col gap-1">
+                {navLinks.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="rounded-xl px-3 py-2.5 text-sm font-semibold text-neutral-700 hover:bg-neutral-50 hover:text-neutral-950 transition-colors"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </nav>
+              <div className="mt-4 flex flex-col gap-3 border-t border-neutral-100 pt-4">
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-center text-sm font-semibold text-neutral-600 py-2"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="inline-flex items-center justify-center h-12 rounded-full bg-black text-white text-sm font-bold shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
+                >
+                  Get Started
+                </Link>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
-      {/* HERO SECTION */}
-      <main className="relative pt-12 pb-24 md:pt-16 md:pb-32 z-10">
-        <div className="relative mx-auto max-w-[96rem] px-4 sm:px-6 lg:px-8">
+      {/* HERO SECTION — pt-6 (24px) keeps the gap to the navbar tight and consistent */}
+      <main className="relative pt-6 pb-24 md:pb-32 z-10">
+        <div className={`relative ${CONTAINER_CLASS}`}>
           {/* Main Card Wrapper */}
           <div className="rounded-[2.5rem] border border-neutral-200/80 bg-gradient-to-b from-white via-white to-neutral-50/50 p-8 md:p-16 shadow-[0_30px_80px_rgba(0,0,0,0.08)] relative overflow-hidden">
             <div className="absolute inset-0 bg-grid-faint pointer-events-none opacity-20" />
@@ -809,7 +891,7 @@ export default function Landing() {
 
         </div>
 
-        <div className="mx-auto max-w-[96rem] px-4 sm:px-6 lg:px-8">
+        <div className={CONTAINER_CLASS}>
           {/* POWERED BY SECTION */}
           <div className="relative pt-16 pb-[72px]">
             <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10">
@@ -835,7 +917,7 @@ export default function Landing() {
 
             {/* Break out of the page container and re-align to the Hero card's own width */}
             <div className="relative left-1/2 -translate-x-1/2 w-screen mt-9">
-              <div className="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8">
+              <div className={CONTAINER_CLASS}>
                 <Reveal variant="scale" delay={150}>
                   {/* Desktop: two counter-scrolling rows */}
                   <div className="hidden lg:flex flex-col gap-5">
@@ -865,7 +947,7 @@ export default function Landing() {
           </div>
 
           {/* FEATURES SECTION */}
-          <div id="features" className="scroll-mt-28 max-w-[96rem] mx-auto relative">
+          <div id="features" className="scroll-mt-28 relative">
             {/* Decorative floating elements — blur circles, cubes, grid, particles */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10">
               <div className="absolute inset-0 bg-grid-faint opacity-30 [mask-image:radial-gradient(ellipse_60%_60%_at_50%_20%,black,transparent)]" />
@@ -1001,7 +1083,7 @@ export default function Landing() {
 
             {/* Break out of the page container for a full-width, continuously scrolling card marquee */}
             <div className="relative left-1/2 -translate-x-1/2 w-screen">
-              <div className="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-6">
+              <div className={`${CONTAINER_CLASS} flex flex-col gap-6`}>
                 <TestimonialMarquee items={testimonials} direction="left" duration={55} />
                 <TestimonialMarquee items={[...testimonials].reverse()} direction="right" duration={50} />
               </div>
@@ -1100,7 +1182,7 @@ export default function Landing() {
 
       {/* FOOTER */}
       <footer className="border-t border-neutral-100 bg-neutral-50/50 py-16 relative z-10 text-left">
-        <div className="mx-auto max-w-[96rem] px-6 md:px-8 grid grid-cols-2 md:grid-cols-5 gap-8 items-start">
+        <div className={`${CONTAINER_CLASS} grid grid-cols-2 md:grid-cols-5 gap-8 items-start`}>
           <div className="col-span-2 space-y-4">
             <div className="flex items-center gap-3">
               <LogoIcon />
