@@ -14,6 +14,13 @@ export function findUserById(id, { includeRole = false } = {}) {
 	});
 }
 
+export function findUserByGoogleId(googleId, { includeRole = false } = {}) {
+	return prisma.user.findUnique({
+		where: { googleId },
+		...(includeRole ? { include: { roles: { include: { role: true }, orderBy: { createdAt: 'asc' } } } } : {}),
+	});
+}
+
 export function createUser({ name, email, password, roleId }) {
 	return prisma.user.create({
 		data: {
@@ -24,6 +31,28 @@ export function createUser({ name, email, password, roleId }) {
 				create: { roleId },
 			},
 		},
+		include: { roles: { include: { role: true }, orderBy: { createdAt: 'asc' } } },
+	});
+}
+
+export function createGoogleUser({ name, email, googleId, roleId }) {
+	return prisma.user.create({
+		data: {
+			name,
+			email,
+			googleId,
+			roles: {
+				create: { roleId },
+			},
+		},
+		include: { roles: { include: { role: true }, orderBy: { createdAt: 'asc' } } },
+	});
+}
+
+export function linkGoogleAccount(id, googleId) {
+	return prisma.user.update({
+		where: { id },
+		data: { googleId },
 		include: { roles: { include: { role: true }, orderBy: { createdAt: 'asc' } } },
 	});
 }

@@ -1,8 +1,10 @@
 import { useCallback, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router";
-import { Button, Form, Input, Typography, message } from "antd";
+import { Button, Divider, Form, Input, Typography, message } from "antd";
 import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
+import { GoogleLogin } from "@react-oauth/google";
 import { AxiosError } from "axios";
+import { useGoogleAuth } from "../hooks/useGoogleAuth";
 import { zodRule } from "../libs/zod-rule";
 import { registerObjectSchema } from "../schemas/auth";
 import { mainClient } from "../store";
@@ -55,6 +57,8 @@ export default function Register() {
 	const handleFinishFailed = () => {
 		message.error("Please fix the errors and try again.");
 	};
+
+	const { handleGoogleSuccess, googleSubmitting } = useGoogleAuth();
 
 	return (
 		<main className="relative grid min-h-svh place-items-center overflow-hidden bg-white px-5 py-8">
@@ -153,6 +157,19 @@ export default function Register() {
 						</Button>
 					</Form.Item>
 				</Form>
+
+				<Divider className="relative z-10 my-6! text-neutral-400! text-xs!">or</Divider>
+
+				<div
+					className={`relative z-10 flex justify-center${
+						googleSubmitting ? " pointer-events-none opacity-60" : ""
+					}`}
+				>
+					<GoogleLogin
+						onSuccess={handleGoogleSuccess}
+						onError={() => message.error("Google sign-in failed")}
+					/>
+				</div>
 
 				<Text className="relative z-10 mt-6 block text-center text-neutral-500!">
 					Already have an account?{" "}

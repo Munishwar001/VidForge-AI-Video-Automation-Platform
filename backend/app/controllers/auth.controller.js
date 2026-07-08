@@ -1,11 +1,21 @@
+import { OAuth2Client } from 'google-auth-library';
 import prisma from '../config/db.js';
 import { sendPasswordResetEmail } from '../libs/communication.js';
 import { bcryptPass, compareBcrypt, generateToken, hashToken } from '../libs/encryption.js';
 import { clearAuthCookie, sanitizeUser, setAuthCookie, signToken } from '../services/auth.js';
-import { createUser, findUserByEmail, findUserById, updateUserPassword } from '../services/user.js';
+import {
+	createGoogleUser,
+	createUser,
+	findUserByEmail,
+	findUserByGoogleId,
+	findUserById,
+	linkGoogleAccount,
+	updateUserPassword,
+} from '../services/user.js';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export async function login(req, res) {
 	const { email, password } = req.body;
@@ -42,6 +52,53 @@ export async function register(req, res) {
 	const user = await createUser({ name, email, password: hashedPassword, roleId: role.id });
 
 	return res.status(201).json(sanitizeUser(user));
+}
+
+export async function googleAuth(req, res) {
+	const { credential } = req.body;
+
+	if (!process.env.GOOGLE_CLIENT_ID) {
+		return res.status(500).json({ error: 'Google sign-in is not configured' });
+	}
+
+	let payload;
+	try {
+		const ticket = await googleClient.verifyIdToken({
+			idToken: credential,
+			audience: process.env.GOOGLE_CLIENT_ID,
+		});
+		payload = ticket.getPayload();
+	} catch {
+		return res.status(401).json({ error: 'Invalid Google credential' });
+	}
+
+	if (!payload?.email || !payload.email_verified) {
+		return res.status(401).json({ error: 'Google account email is not verified' });
+	}
+
+	let user = await findUserByGoogleId(payload.sub, { includeRole: true });
+
+	if (!user) {
+		const existingUser = await findUserByEmail(payload.email, { includeRole: true });
+		if (existingUser) {
+			user = await linkGoogleAccount(existingUser.id, payload.sub);
+		} else {
+			const role = await prisma.role.findUnique({ where: { name: 'user' } });
+			if (!role) {
+				return res.status(500).json({ error: 'Default role is not configured' });
+			}
+			user = await createGoogleUser({
+				name: payload.name || payload.email,
+				email: payload.email,
+				googleId: payload.sub,
+				roleId: role.id,
+			});
+		}
+	}
+
+	const token = signToken(user);
+	setAuthCookie(res, token);
+	return res.json(sanitizeUser(user));
 }
 
 export async function me(req, res) {
